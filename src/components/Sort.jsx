@@ -1,14 +1,21 @@
 import React from 'react';
 
-function Sort() {
+function Sort({ setSortType, sortType }) {
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState(0);
-  const list = ['популярности', 'цене', 'алфавиту'];
+
+  const list = [
+    { name: 'популярности (DESC)', sortProperty: 'rating' },
+    { name: 'популярности (ASC)', sortProperty: '-rating' },
+    { name: 'цене (DESC)', sortProperty: 'price' },
+    { name: 'цене (ASC)', sortProperty: '-price' },
+    { name: 'алфавиту (DESC)', sortProperty: 'title' },
+    { name: 'алфавиту (ASC)', sortProperty: '-title' },
+  ];
   const oneClickItem = (i) => {
-    setSelected(i);
+    setSortType(i);
     setOpen(false);
   };
-  const sortName = list[selected];
+  const sortName = sortType.name;
 
   return (
     <div className="sort">
@@ -30,12 +37,12 @@ function Sort() {
       {open && (
         <div className="sort__popup">
           <ul>
-            {list.map((list, i) => (
+            {list.map((obj, i) => (
               <li
                 key={i}
-                onClick={() => oneClickItem(i)}
-                className={selected === i ? 'active' : ''}>
-                {list}
+                onClick={() => oneClickItem(obj)}
+                className={obj.sortProperty === sortType.sortProperty ? 'active' : ''}>
+                {obj.name}
               </li>
             ))}
           </ul>
