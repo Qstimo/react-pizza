@@ -1,10 +1,10 @@
 /* eslint-disable array-callback-return */
 import React from 'react';
 
-function Categories({ value, setCategoryId, title }) {
+function Categories({ value, setCategory, title }) {
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
   const onClickCategory = (index) => {
-    setCategoryId(index);
+    setCategory(index);
     title(categories[index]);
   };
 
