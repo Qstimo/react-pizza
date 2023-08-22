@@ -1,5 +1,5 @@
 import React from 'react';
-import { UseSelector, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../../redux/slices/cartSlice';
 
 const typeNames = ['тонкое', 'традиционное'];
@@ -18,7 +18,7 @@ function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
       price,
       imageUrl,
       type: typeNames[activeType],
-      size: activeSize,
+      size: sizes[activeSize],
     };
     dispatch(addItem(item));
   };

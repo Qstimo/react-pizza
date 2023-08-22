@@ -3,10 +3,20 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import CartItem from '../components/CartItem';
+import { clearItems } from '../redux/slices/cartSlice';
+import CartEmpty from '../components/CartEmpty';
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.cart.items);
+  const { items, totalPrice } = useSelector((state) => state.cart);
+  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
+  const clearCart = () => {
+    dispatch(clearItems());
+  };
+
+  if (!totalPrice) {
+    return <CartEmpty />;
+  }
 
   return (
     <div className="container container--cart">
@@ -43,7 +53,7 @@ const Cart = () => {
             </svg>
             Корзина
           </h2>
-          <div className="cart__clear">
+          <div onClick={clearCart} className="cart__clear">
             <svg
               width="20"
               height="20"
@@ -92,14 +102,16 @@ const Cart = () => {
           <div classname="cart__bottom-details">
             <span>
               {' '}
-              Всего пицц: <b>3 шт.</b>{' '}
+              Всего пицц: <b>{totalCount} шт.</b>{' '}
             </span>
             <span>
               {' '}
-              Сумма заказа: <b>900 ₽</b>{' '}
+              Сумма заказа: <b>{totalPrice} ₽</b>{' '}
             </span>
           </div>
-          <div classname="cart__bottom-buttons">
+          <div
+            classname="cart__bottom-buttons "
+            style={{ margin: '30px 0 auto 0', display: 'flex', justifyContent: 'space-between' }}>
             <Link to="/" classname="button button--outline button--add go-back-btn">
               <svg
                 width="8"
@@ -116,10 +128,10 @@ const Cart = () => {
                 />
               </svg>
 
-              <span>Вернуться назад</span>
+              <span className="button">Вернуться назад</span>
             </Link>
             <div classname="button pay-btn">
-              <span>Оплатить сейчас</span>
+              <span className="button">Оплатить сейчас</span>
             </div>
           </div>
         </div>
