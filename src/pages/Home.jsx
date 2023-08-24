@@ -1,31 +1,35 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import qs from 'qs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Pagination from '../components/Pagination';
-import { SearchContext } from '../App';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { categoryId, sort, pageCount } = useSelector((state) => state.filter);
+
+  const { categoryId, sort, pageCount, searchValue } = useSelector((state) => state.filter);
+
+  const { items, status } = useSelector(selectPizzaData);
+
   const dispatch = useDispatch();
+
   const isSeacrh = React.useRef(false);
+
   const isMounted = React.useRef(false);
 
-  const { searchValue } = React.useContext(SearchContext);
-  const [items, setItems] = React.useState([]);
-  const [isLoading, setIsloading] = React.useState(true);
   const [titleCategory, setTitleCategory] = React.useState('Все пиццы');
+
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
-  const pizzas = items.map((obj) => <PizzaBlock key={obj.imageUrl} {...obj} />);
+
+  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
 
   const onChangeCategory = (id) => {
     dispatch(setCategoryId(id));
@@ -35,12 +39,11 @@ const Home = () => {
     dispatch(setPageCount(num));
   };
 
-  const fetchPizzas = () => {
+  const getPizzas = async () => {
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc';
     const sortBy = sort.sortProperty.replace('-', '');
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
-    setIsloading(true);
 
     // fetch(
     //   `https://64cb8751700d50e3c7060db8.mockapi.io/items?page=${pageCurrent}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search} `,
@@ -54,14 +57,24 @@ const Home = () => {
     //     window.scrollTo(0, 0);
     //   });
 
-    axios
-      .get(
-        `https://64cb8751700d50e3c7060db8.mockapi.io/items?page=${pageCount}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search} `,
-      )
-      .then((res) => {
-        setItems(res.data);
-        setIsloading(false);
-      });
+    // await axios
+    //   .get(
+    //     `https://64cb8751700d50e3c7060db8.mockapi.io/items?page=${pageCount}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search} `,
+    //   )
+    //   .then((res) => {
+    //     setItems(res.data);
+    //     setIsloading(false);
+    //   });
+
+    dispatch(
+      fetchPizzas({
+        order,
+        sortBy,
+        category,
+        search,
+        pageCount,
+      }),
+    );
   };
 
   React.useEffect(() => {
@@ -77,7 +90,7 @@ const Home = () => {
   React.useEffect(() => {
     window.scrollTo(0, 0);
     if (!isSeacrh.current) {
-      fetchPizzas();
+      getPizzas();
     }
     isSeacrh.current = false;
   }, [categoryId, sort, searchValue, pageCount]);
@@ -107,7 +120,17 @@ const Home = () => {
           <Sort />
         </div>
         <h2 className="content__title">{titleCategory}</h2>
-        <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+        {status === 'error' ? (
+          <div className="content__error-info">
+            <h2 style={{ padding: '30px' }}>
+              Произошла ошибка <icon>😕</icon>
+            </h2>
+            <p style={{ padding: '10px' }}>К сожалению пиццы сегодня не будет(</p>
+          </div>
+        ) : (
+          <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>
+        )}
+
         <Pagination value={pageCount} page={onChangePage} />
       </div>
     </>

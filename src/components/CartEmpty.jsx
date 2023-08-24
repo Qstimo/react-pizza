@@ -12,7 +12,7 @@ function CartEmpty() {
         <br />
         Для того, чтобы заказать пиццу, перейди на главную страницу.
       </p>
-      <Link className="button" to="/">
+      <Link className="button--black" to="/">
         Вернуться назад
       </Link>
     </div>

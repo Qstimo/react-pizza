@@ -112,7 +112,7 @@ const Cart = () => {
           <div
             classname="cart__bottom-buttons "
             style={{ margin: '30px 0 auto 0', display: 'flex', justifyContent: 'space-between' }}>
-            <Link to="/" classname="button button--outline button--add go-back-btn">
+            <Link to="/" classname="button   go-back-btn">
               <svg
                 width="8"
                 height="14"
