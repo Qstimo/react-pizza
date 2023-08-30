@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import qs from 'qs';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, } from 'react-router-dom';
 
-import { setCategoryId, setPageCount, setFilters } from '../redux/slices/filterSlice';
+import { setCategoryId, setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice';
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
@@ -12,10 +12,10 @@ import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Pagination from '../components/Pagination';
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  const { categoryId, sort, pageCount, searchValue } = useSelector((state) => state.filter);
+  const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter);
 
   const { items, status } = useSelector(selectPizzaData);
 
@@ -25,17 +25,17 @@ const Home = () => {
 
   const isMounted = React.useRef(false);
 
-  const [titleCategory, setTitleCategory] = React.useState('Все пиццы');
+  const {titleCategory} = useSelector(selectFilter)
 
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
-  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const pizzas = items.map((obj:any) => <PizzaBlock key={obj.id} {...obj} />);
 
-  const onChangeCategory = (id) => {
+  const onChangeCategory = (id:number) => {
     dispatch(setCategoryId(id));
   };
 
-  const onChangePage = (num) => {
+  const onChangePage = (num:number) => {
     dispatch(setPageCount(num));
   };
 
@@ -67,6 +67,7 @@ const Home = () => {
     //   });
 
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         order,
         sortBy,
@@ -115,7 +116,7 @@ const Home = () => {
           <Categories
             value={categoryId}
             setCategory={onChangeCategory}
-            title={(i) => setTitleCategory(i)}
+           
           />
           <Sort />
         </div>
@@ -123,7 +124,7 @@ const Home = () => {
         {status === 'error' ? (
           <div className="content__error-info">
             <h2 style={{ padding: '30px' }}>
-              Произошла ошибка <icon>😕</icon>
+              Произошла ошибка <span>😕</span>
             </h2>
             <p style={{ padding: '10px' }}>К сожалению пиццы сегодня не будет(</p>
           </div>

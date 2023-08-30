@@ -1,11 +1,23 @@
 /* eslint-disable array-callback-return */
 import React from 'react';
+import {  setTitleValue } from '../redux/slices/filterSlice';
+import { useDispatch } from 'react-redux';
 
-function Categories({ value, setCategory, title }) {
+type CategoriesProps={ 
+  
+  
+  value:number,
+  setCategory:(i:number)=>void,
+}
+
+const Categories:React.FC<CategoriesProps>=({ value, setCategory,  })=> {
+  const dispatch = useDispatch();
+
+
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
-  const onClickCategory = (index) => {
+  const onClickCategory = (index:number) => {
     setCategory(index);
-    title(categories[index]);
+    dispatch(setTitleValue(categories[index]));
   };
 
   return (
