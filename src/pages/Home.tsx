@@ -11,6 +11,7 @@ import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Pagination from '../components/Pagination';
+import { useAppDispatch } from '../redux/store';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Home: React.FC = () => {
 
   const { items, status } = useSelector(selectPizzaData);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const isSeacrh = React.useRef(false);
 
@@ -67,7 +68,6 @@ const Home: React.FC = () => {
     //   });
 
     dispatch(
-      // @ts-ignore
       fetchPizzas({
         order,
         sortBy,
