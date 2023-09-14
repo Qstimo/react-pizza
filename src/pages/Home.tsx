@@ -4,14 +4,15 @@ import qs from 'qs';
 import { useNavigate, } from 'react-router-dom';
 
 import { setCategoryId, setPageCount, setFilters, selectFilter } from '../redux/slices/filterSlice';
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
+import { SearchPizzaParams, fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 
 import Categories from '../components/Categories';
-import Sort, { list } from '../components/Sort';
+import  { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Pagination from '../components/Pagination';
 import { useAppDispatch } from '../redux/store';
+import SortPopup from '../components/Sort';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -69,24 +70,28 @@ const Home: React.FC = () => {
 
     dispatch(
       fetchPizzas({
-        order,
+        order, 
         sortBy,
         category,
         search,
-        pageCount,
+        pageCount:String(pageCount),
       }),
     );
   };
 
-  React.useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-      console.log(params);
-      const sorts = list.find((obj) => obj.sortProperty === params.sortProperty);
-      dispatch(setFilters({ ...params, sorts }));
-      isSeacrh.current = true;
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   if (window.location.search) {
+  //     const params = qs.parse(window.location.search.substring(1)) as unknown as SearchPizzaParams ;
+  //     const sort = list.find((obj) => obj.sortProperty === params.sortBy);
+   
+  //     dispatch(setFilters({
+  //       searchValue:params.search,
+  //       categoryId: Number(params.category),
+  //       pageCount:Number(params.pageCount),
+  //       sort:sort?sort:list[0] }));
+  //   }
+  //   isSeacrh.current = true;
+  // }, []);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -96,17 +101,17 @@ const Home: React.FC = () => {
     isSeacrh.current = false;
   }, [categoryId, sort, searchValue, pageCount]);
 
-  React.useEffect(() => {
-    if (isMounted.current) {
-      const queryString = qs.stringify({
-        sort,
-        categoryId,
-        pageCount,
-      });
-      navigate(`?${queryString}`);
-    }
-    isMounted.current = true;
-  }, [categoryId, sort, searchValue, pageCount]);
+  // React.useEffect(() => {
+  //   if (isMounted.current) {
+  //     const queryString = qs.stringify({
+  //       sort,
+  //       categoryId,
+  //       pageCount,
+  //     });
+  //     navigate(`?${queryString}`);
+  //   }
+  //   isMounted.current = true;
+  // }, [categoryId, sort, searchValue, pageCount]);
 
   return (
     <>
@@ -118,7 +123,7 @@ const Home: React.FC = () => {
             setCategory={onChangeCategory}
            
           />
-          <Sort />
+          <SortPopup />
         </div>
         <h2 className="content__title">{titleCategory}</h2>
         {status === 'error' ? (
