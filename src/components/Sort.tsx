@@ -18,7 +18,7 @@ export const list:SortItems[] = [
   { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-function SortPopup() {
+export const SortPopup:React.FC=React.memo(() =>{
   const [open, setOpen] = React.useState(false);
   const dispath = useDispatch();
   const sort = useSelector(selectSort);
@@ -76,5 +76,5 @@ function SortPopup() {
       )}
     </div>
   );
-}
-export default SortPopup;
+})
+

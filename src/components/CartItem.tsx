@@ -5,7 +5,7 @@ import { CartItem, addItem, minusItem, removeItem } from '../redux/slices/cartSl
 
 type CartItemProps = { id:string, title:string, price:number, count:number, imageUrl:string, type:string, size:number }
 
-const CartItemBLock: React.FC<CartItemProps> = ({ id, title, price, count, imageUrl, type, size }) => {
+export const CartItemBLock: React.FC<CartItemProps> = ({ id, title, price, count, imageUrl, type, size }) => {
   const dispatch = useDispatch();
 
   const onClickPlus = () => {
@@ -37,7 +37,7 @@ const CartItemBLock: React.FC<CartItemProps> = ({ id, title, price, count, image
         </p>
       </div>
       <div className="cart__item-count">
-        <div
+        <button  disabled={count===1} 
           onClick={onClickMinus}
           className="button button--outline button--circle cart__item-count-minus">
           <svg
@@ -55,9 +55,10 @@ const CartItemBLock: React.FC<CartItemProps> = ({ id, title, price, count, image
               fill="#EB5A1E"
             />
           </svg>
-        </div>
+        </button>
         <b>{count}</b>
-        <div
+        <button
+       
           onClick={onClickPlus}
           className="button button--outline button--circle cart__item-count-plus">
           <svg
@@ -75,12 +76,13 @@ const CartItemBLock: React.FC<CartItemProps> = ({ id, title, price, count, image
               fill="#EB5A1E"
             />
           </svg>
-        </div>
+        </button>
       </div>
       <div className="cart__item-price">
         <b>{price * count} ₽</b>
       </div>
-      <div onClick={onClickRemove} className="cart__item-remove">
+      <div
+     onClick={onClickRemove} className="cart__item-remove">
         <div className="button button--outline button--circle">
           <svg
             width="10"
@@ -102,4 +104,4 @@ const CartItemBLock: React.FC<CartItemProps> = ({ id, title, price, count, image
     </div>
   );
 };
-export default CartItemBLock;
+

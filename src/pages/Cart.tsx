@@ -2,9 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import CartItem from '../components/CartItem';
 import { clearItems, selectCart } from '../redux/slices/cartSlice';
-import CartEmpty from '../components/CartEmpty';
+import {CartEmpty, CartItemBLock} from '../components';
 
 const Cart: React.FC= () => {
   const dispatch = useDispatch();
@@ -95,7 +94,7 @@ const Cart: React.FC= () => {
         </div>
         <div className="content__items">
           {items.map((item:any) => (
-            <CartItem key={item.id} {...item} />
+            <CartItemBLock key={item.id} {...item} />
           ))}
         </div>
         <div className="cart__bottom">
@@ -110,9 +109,9 @@ const Cart: React.FC= () => {
             </span>
           </div>
           <div
-            className="cart__bottom-buttons "
+            className="cart__bottom-buttons  "
             style={{ margin: '30px 0 auto 0', display: 'flex', justifyContent: 'space-between' }}>
-            <Link to="/" className="button   go-back-btn">
+            <Link to="/" className="button  go-back-btn">
               <svg
                 width="8"
                 height="14"
@@ -128,10 +127,10 @@ const Cart: React.FC= () => {
                 />
               </svg>
 
-              <span className="button">Вернуться назад</span>
+              <span >Вернуться назад</span>
             </Link>
             <div className="button pay-btn">
-              <span className="button">Оплатить сейчас</span>
+              <span className="">Оплатить сейчас</span>
             </div>
           </div>
         </div>

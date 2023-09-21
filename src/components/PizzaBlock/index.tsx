@@ -7,7 +7,7 @@ const typeNames = ['тонкое', 'традиционное'];
 
 type PizzaProps = { id:string, title:string, price:number, imageUrl:string, sizes:number[], types:number[] };
 
-const  PizzaBlock:React.FC<PizzaProps> =({ id, title, price, imageUrl, sizes, types })=> {
+export const  PizzaBlock:React.FC<PizzaProps> =({ id, title, price, imageUrl, sizes, types })=> {
   const dispatch = useDispatch();
   const cartItem = useSelector(slectCartItemById(id));
   const [activeType, setActiveType] = React.useState(0);
@@ -79,4 +79,3 @@ const  PizzaBlock:React.FC<PizzaProps> =({ id, title, price, imageUrl, sizes, ty
     </div>
   );
 }
-export default PizzaBlock;
